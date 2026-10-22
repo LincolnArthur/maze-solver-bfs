@@ -2,7 +2,7 @@
 
 //============================================================
 //UNIVASF - Universidade Federal do Vale do São Francisco
-//Algoritmos e Estruturas de Dados I - Projeto 1
+//Algoritmos e Estruturas de Dados - Projeto 1
 //Solucionador de Labirintos (BFS)
 //============================================================
 
