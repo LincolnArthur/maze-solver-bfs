@@ -1,6 +1,18 @@
 #include "maze.h"
 
-// Variável global para manter o labirinto carregado na memória
+//============================================================
+//UNIVASF - Universidade Federal do Vale do São Francisco
+//Algoritmos e Estruturas de Dados I - Projeto 1
+//Solucionador de Labirintos (BFS)
+//============================================================
+
+//============================================================
+//Docente: Professora Dra. Ana Emilia de Melo Queiroz
+//Discentes: Arthur Lincoln Pinheiro Herculino Almeida
+//           Caio Benevides Pontes
+//============================================================
+
+//Labirinto padrão (0 = livre, 1 = parede). É o que roda se não carregar nenhum arquivo
 int lab_original[LINHAS][COLUNAS] = {
     {0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
     {1,0,1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0},
@@ -17,23 +29,22 @@ int lab_original[LINHAS][COLUNAS] = {
 int main() {
     int opcao;
 
+    //Liga as cores (\033) no console do Windows
     #ifdef _WIN32
-        SetConsoleOutputCP(65001); // acentos em UTF-8 no console
+        SetConsoleOutputCP(65001); //pros acentos aparecerem certo
         HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
         if (hOut != INVALID_HANDLE_VALUE) {
             DWORD dwMode = 0;
             if (GetConsoleMode(hOut, &dwMode)) {
-                // Ativa o ENABLE_VIRTUAL_TERMINAL_PROCESSING (0x0004)
                 // Pra funcionar em qualquer powershell, ou cmd
                 dwMode |= 0x0004; 
                 SetConsoleMode(hOut, dwMode);
             }
         }
     #endif
-    /* ---------------------------------------------- */
 
     do {
-        printf("\033[2J\033[H"); // Limpa a tela
+        printf("\033[2J\033[H"); //Limpa a tela
         printf("\n");
         printf("||=====================================================||\n");
         printf("||      SOLUCIONADOR DE LABIRINTOS (MODELO BFS)        ||\n");
@@ -49,7 +60,7 @@ int main() {
             case 1:
                 executarBusca(lab_original);
                 printf("\nPressione Enter para voltar ao menu...");
-                getchar(); getchar();
+                getchar(); getchar(); //o primeiro getchar pega o Enter que sobrou do scanf
                 break;
 
             case 2:

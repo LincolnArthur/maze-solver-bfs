@@ -1,5 +1,7 @@
 #include "maze.h"
 
+// 1. IMPRIMIR LABIRINTO
+//O \033[H volta o cursor pro topo sem apagar a tela, assim a animação não fica piscando
 void imprimirLabirinto(int lab[LINHAS][COLUNAS], int passo, const char *status) {
     int i, j;
     printf("\033[H");
@@ -11,11 +13,11 @@ void imprimirLabirinto(int lab[LINHAS][COLUNAS], int passo, const char *status) 
         printf(BORDER "|" RESET);
         for (j = 0; j < COLUNAS; j++) {
             switch (lab[i][j]) {
-                case 0: printf(PATH);  break;
-                case 1: printf(WALL);  break;
-                case 2: printf(VISIT); break;
-                case 3: printf(HEAD);  break;
-                case 8: printf(FINAL); break;
+                case 0: printf(PATH);  break; //livre
+                case 1: printf(WALL);  break; //parede
+                case 2: printf(VISIT); break; //já visitado
+                case 3: printf(HEAD);  break; //onde a busca está agora
+                case 8: printf(FINAL); break; //caminho final
             }
         }
         printf(BORDER "|\n" RESET);
@@ -24,32 +26,36 @@ void imprimirLabirinto(int lab[LINHAS][COLUNAS], int passo, const char *status) 
     printf(" Status : %-40s\n", status);
 }
 
+// 2. BUSCA EM LARGURA (BFS)
+//Começa no (0,0) e procura a saída no canto de baixo (LINHAS-1, COLUNAS-1)
 void executarBusca(int lab[LINHAS][COLUNAS]) {
-	resetarFila(); // Limpa a estrutura de dados
-    // Limpeza da matriz para permitir re-execução
+	resetarFila();
+    
     
     printf("\033[2J\033[H");
     
+    //Apaga os 2, 3 e 8 da execução anterior, só as paredes ficam
     for (int i = 0; i < LINHAS; i++) {
         for (int j = 0; j < COLUNAS; j++) {
             if (lab[i][j] != 1) lab[i][j] = 0; 
         }
     }
     int visitado[LINHAS][COLUNAS] = {0};
-    Ponto pai[LINHAS][COLUNAS];
+    Ponto pai[LINHAS][COLUNAS]; //guarda de onde cada célula veio, pra refazer o caminho no final
+    //cima, baixo, esquerda, direita
     int dx[] = {-1, 1, 0, 0};
     int dy[] = {0, 0, -1, 1};
     int i, achou = 0, passo_cont = 0;
 
     enfileirar((Ponto){0, 0});
     visitado[0][0] = 1;
-    pai[0][0] = (Ponto){-1, -1};
+    pai[0][0] = (Ponto){-1, -1}; //-1 marca o começo
 
     while (!filaVazia()) {
         Ponto atual = desenfileirar();
         int ox = atual.x, oy = atual.y;
 
-        if (ox == LINHAS - 1 && oy == COLUNAS - 1) {
+        if (ox == LINHAS - 1 && oy == COLUNAS - 1) { //chegou na saída
             achou = 1;
             break;
         }
@@ -59,6 +65,7 @@ void executarBusca(int lab[LINHAS][COLUNAS]) {
         PAUSA;
         lab[ox][oy] = 2;
 
+        //Olha os 4 vizinhos. Só entra na fila se estiver dentro do labirinto, não for parede e ainda não foi visitado
         for (i = 0; i < 4; i++) {
             int nx = ox + dx[i];
             int ny = oy + dy[i];
@@ -71,6 +78,8 @@ void executarBusca(int lab[LINHAS][COLUNAS]) {
         }
     }
 
+    //RECONSTRUIR O CAMINHO
+    //Volta da saída pelos pais até chegar no -1
     if (achou) {
         Ponto p = (Ponto){LINHAS - 1, COLUNAS - 1};
         while (p.x != -1) {
