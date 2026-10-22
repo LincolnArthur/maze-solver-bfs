@@ -2,7 +2,7 @@
 
 Programa de terminal que encontra a saída de um labirinto usando **Busca em Largura (BFS)** e mostra a exploração **animada, passo a passo**, até reconstruir o caminho mais curto.
 
-Projeto 1 da disciplina **Algoritmos e Estruturas de Dados **, do curso de Engenharia de Computação da UNIVASF.
+Projeto 1 da disciplina **Algoritmos e Estruturas de Dados**, do curso de Engenharia de Computação da UNIVASF.
 
 ## Demonstração
 
